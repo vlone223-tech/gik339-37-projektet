@@ -1,3 +1,4 @@
+/* Global styles */
 body {
   background-color: #2c3e50;
   color: #ecf0f1;
@@ -10,11 +11,13 @@ body {
   padding: 20px;
 }
 
+/* Header styles */
 h2 {
   color: #ecf0f1;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
+/* Form container styles */
 .form-container {
   background-color: #34495e;
   border-radius: 8px;
@@ -37,6 +40,7 @@ input.form-control:focus {
   box-shadow: none;
 }
 
+/* Button styles */
 button {
   font-size: 16px;
 }
@@ -68,6 +72,7 @@ button.btn-danger:hover {
   background-color: #c0392b;
 }
 
+/* Book list styles */
 .list-group-item {
   background-color: #34495e;
   border: 1px solid #2c3e50;
@@ -80,6 +85,7 @@ button.btn-danger:hover {
   background-color: #2c3e50;
 }
 
+/* Modal styles */
 .modal-content {
   background-color: #34495e;
   color: #ecf0f1;
@@ -92,4 +98,23 @@ button.btn-danger:hover {
 
 .modal-title {
   color: #ecf0f1;
+}
+.rating-text[data-rating="5"] {
+  color: #2ecc71; /* Green for rating 5 */
+}
+
+.rating-text[data-rating="4"] {
+  color: #27ae60; /* Light Green for rating 4 */
+}
+
+.rating-text[data-rating="3"] {
+  color: #f1c40f; /* Yellow for rating 3 */
+}
+
+.rating-text[data-rating="2"] {
+  color: #e67e22; /* Orange for rating 2 */
+}
+
+.rating-text[data-rating="1"] {
+  color: #e74c3c; /* Red for rating 1 */
 }

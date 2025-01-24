@@ -5,10 +5,22 @@ let isUpdating = false;
 let updatingBookId = null;
 let deleteBookId = null;
 
-// Add a book
-document.getElementById("bookForm").addEventListener("submit", function (e) {
-  e.preventDefault();
+// Initialize event listeners and fetch books on load
+window.onload = () => {
+  initializeEventListeners();
+  fetchAndDisplayBooks();
+};
 
+// Initialize all event listeners
+function initializeEventListeners() {
+  document.getElementById("bookForm").addEventListener("submit", handleFormSubmit);
+  document.getElementById("updateBookBtn").addEventListener("click", handleUpdateBook);
+  document.getElementById("confirmDeleteBtn").addEventListener("click", handleDeleteBook);
+}
+
+// Handle form submission (Add a book)
+function handleFormSubmit(e) {
+  e.preventDefault();
   if (isUpdating) return; // Prevent submission during update mode
 
   const bookData = {
@@ -30,7 +42,7 @@ document.getElementById("bookForm").addEventListener("submit", function (e) {
       fetchAndDisplayBooks();
     })
     .catch(() => showMessage("Failed to add book.", "danger"));
-});
+}
 
 // Fetch and display all books
 function fetchAndDisplayBooks() {
@@ -38,30 +50,35 @@ function fetchAndDisplayBooks() {
     .then((response) => response.json())
     .then((books) => {
       const bookList = document.getElementById("bookList");
-      bookList.innerHTML = "";
+      bookList.innerHTML = ""; // Clear the list
 
       books.forEach((book) => {
         const listItem = document.createElement("li");
         listItem.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+        listItem.setAttribute("data-rating", book.rating); // Set rating for CSS styling
 
         listItem.innerHTML = `
-          <div>
-            <p><strong>Title:</strong> ${book.bookTitle}</p>
-            <p><strong>Genre:</strong> ${book.bookGenre}</p>
-            <p><strong>Year:</strong> ${book.publishedYear}</p>
-            <p><strong>Rating:</strong> ${book.rating}</p>
-          </div>
-          <div>
-            <button class="btn btn-warning btn-sm" onclick="prepareUpdateBook(${book.id})">Update</button>
-            <button class="btn btn-danger btn-sm" onclick="confirmDeleteBook(${book.id}, '${book.bookTitle}')">Delete</button>
-          </div>
-        `;
+        <div>
+          <p><strong>Title:</strong> ${book.bookTitle}</p>
+          <p><strong>Genre:</strong> ${book.bookGenre}</p>
+          <p><strong>Year:</strong> ${book.publishedYear}</p>
+          <p>
+            <strong>Rating:</strong>
+            <span class="rating-text" data-rating="${book.rating}">${book.rating}</span>
+          </p>
+        </div>
+        <div>
+          <button class="btn btn-warning btn-sm" onclick="prepareUpdateBook(${book.id})">Update</button>
+          <button class="btn btn-danger btn-sm" onclick="confirmDeleteBook(${book.id}, '${book.bookTitle}')">Delete</button>
+        </div>
+      `;
 
         bookList.appendChild(listItem);
       });
     })
     .catch(() => showMessage("Failed to fetch books.", "danger"));
 }
+listItem.setAttribute("data-rating", book.rating);
 
 // Prepare for updating a book
 function prepareUpdateBook(id) {
@@ -85,7 +102,7 @@ function prepareUpdateBook(id) {
 }
 
 // Update a book
-document.getElementById("updateBookBtn").addEventListener("click", function (e) {
+function handleUpdateBook(e) {
   e.preventDefault();
   if (!isUpdating || !updatingBookId) return;
 
@@ -108,7 +125,7 @@ document.getElementById("updateBookBtn").addEventListener("click", function (e) 
       fetchAndDisplayBooks();
     })
     .catch(() => showMessage("Failed to update book.", "danger"));
-});
+}
 
 // Confirm book deletion
 function confirmDeleteBook(id, title) {
@@ -122,8 +139,8 @@ function confirmDeleteBook(id, title) {
   deleteConfirmModal.show();
 }
 
-// Delete a book
-document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
+// Handle book deletion
+function handleDeleteBook() {
   if (deleteBookId !== null) {
     fetch(`${url}/${deleteBookId}`, { method: "DELETE" })
       .then(() => {
@@ -132,7 +149,7 @@ document.getElementById("confirmDeleteBtn").addEventListener("click", function (
       })
       .catch(() => showMessage("Failed to delete book.", "danger"));
   }
-});
+}
 
 // Reset form and buttons
 function resetFormAndButtons() {
@@ -151,6 +168,3 @@ function showMessage(message, type) {
   document.getElementById("messageText").innerText = message;
   setTimeout(() => (messageBox.style.display = "none"), 3000);
 }
-
-// Initialize and fetch books on load
-window.onload = fetchAndDisplayBooks;
